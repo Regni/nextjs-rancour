@@ -32,11 +32,11 @@ const page = async ({ searchParams } :PageProps) => {
     const sorted = [...roster]
     switch (sortBy) {
       case 'a-z':
-        return sorted.sort((a, b) => a.name.localeCompare(b.character.name))
+        return sorted.sort((a, b) => a.name.localeCompare(b.name))
       case 'z-a':
-        return sorted.sort((a, b) => b.name.localeCompare(a.character.name))
+        return sorted.sort((a, b) => b.name.localeCompare(a.name))
       case 'role':
-        return sorted.sort((a, b) => a.role.localeCompare(b.character.active_spec_role))
+        return sorted.sort((a, b) => a.role.localeCompare(b.role))
       case 'rank':
         return sorted.sort((a, b) => a.rank - b.rank)
       default:
