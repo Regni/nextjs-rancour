@@ -11,21 +11,21 @@ const RosterAnimationComponent = ({ roster }: { roster: any[] }) => {
           {roster.map((raider) => (
             <motion.div
               layout
-              key={raider.character.name}
+              key={raider.name}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
             >
               <RaiderCard
-                name={raider.character.name}
-                realm={raider.character.realm}
+                name={raider.name}
+                realm={raider.realm}
                 rank={raider.rank}
-                wowClass={raider.character.class}
-                spec={raider.character.active_spec_name}
-                role={raider.character.active_spec_role}
-                lastUpdate={raider.character.last_crawled_at}
-                avatarUrl={raider.character.avatar_url}
+                wowClass={raider.class}
+                spec={raider.spec}
+                role={raider.role}
+                lastUpdate={raider.raiderioUpdate}
+                avatarUrl={raider.avatarUrl}
               />
             </motion.div>
           ))}

@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { getRoster } from '@/lib/raiderio/getRoster'
+import { getRosterDB } from '@/lib/raiderio/getRoster'
 import RosterSorter from '@/components/RosterSorter'
 import RosterAnimationComponent from '@/components/motion/RosterAnimationComponent'
 
@@ -18,7 +18,7 @@ const page = async ({ searchParams } :PageProps) => {
   
   
   try{
-    roster = await getRoster()
+    roster = await getRosterDB()
   }catch(err){
     return (<section>
         <h1>Roster Page</h1>
@@ -32,11 +32,11 @@ const page = async ({ searchParams } :PageProps) => {
     const sorted = [...roster]
     switch (sortBy) {
       case 'a-z':
-        return sorted.sort((a, b) => a.character.name.localeCompare(b.character.name))
+        return sorted.sort((a, b) => a.name.localeCompare(b.character.name))
       case 'z-a':
-        return sorted.sort((a, b) => b.character.name.localeCompare(a.character.name))
+        return sorted.sort((a, b) => b.name.localeCompare(a.character.name))
       case 'role':
-        return sorted.sort((a, b) => a.character.active_spec_role.localeCompare(b.character.active_spec_role))
+        return sorted.sort((a, b) => a.role.localeCompare(b.character.active_spec_role))
       case 'rank':
         return sorted.sort((a, b) => a.rank - b.rank)
       default:

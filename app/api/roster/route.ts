@@ -1,9 +1,9 @@
-import { getRoster } from "@/lib/raiderio/getRoster";
+import { getRosterDB } from "@/lib/raiderio/getRoster";
 import { NextResponse } from "next/server";
 
 export async function GET() {
   try {
-    const roster = await getRoster();
+    const roster = await getRosterDB();
     return NextResponse.json(roster);
   } catch (error) {
     return NextResponse.json(

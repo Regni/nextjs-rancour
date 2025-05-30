@@ -1,6 +1,9 @@
-import { getRaiderioAvatar } from "@/lib/raiderio/getChar";
+import { getExtraRaiderioData } from "@/lib/raiderio/getChar";
 
-export async function getRoster() {
+import prisma from "../db/prisma";
+import { upsertRaider } from "../db/raider";
+
+export async function syncRosterDB() {
   const officers = [
     "Regnipaw",
     "Snailmiao",
@@ -27,19 +30,51 @@ export async function getRoster() {
 
   const rosterWithAvatars = await Promise.all(
     roster.map(async (raider: any) => {
-      const avatarUrl = await getRaiderioAvatar(
+      const extraData = await getExtraRaiderioData(
         raider.character.name,
         raider.character.realm
       );
+
       return {
         ...raider,
         character: {
           ...raider.character,
-          avatar_url: avatarUrl,
+          avatar_url: extraData.avatar_url,
+          weeklies: extraData.weeklies,
         },
       };
     })
   );
 
+  //update db
+
+  for (const raider of rosterWithAvatars) {
+    await upsertRaider({
+      name: raider.character.name,
+      realm: raider.character.realm,
+      class: raider.character.class,
+      spec: raider.character.active_spec_name,
+      role: raider.character.active_spec_role,
+      rank: raider.rank,
+      raiderioUpdate: new Date(raider.character.last_crawled_at),
+      avatarUrl: raider.character.avatar_url,
+    }).catch((err) => {
+      console.error("Error updating Raider:", err);
+    });
+  }
+
   return rosterWithAvatars;
+}
+
+export async function getRosterDB() {
+  const roster = await prisma.raider.findMany({
+    where: {
+      active: true,
+    },
+    orderBy: {
+      rank: "asc",
+    },
+  });
+
+  return roster;
 }

@@ -25,3 +25,21 @@ export async function getRaiderioAvatar(
   const character = await response.json();
   return character.thumbnail_url;
 }
+
+export async function getExtraRaiderioData(
+  characterName: string,
+  realmName: string
+) {
+  const url = `https://raider.io/api/v1/characters/profile?region=eu&realm=${realmName}&name=${characterName}&fields=mythic_plus_weekly_highest_level_runs`;
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`raider.io error: ${response.statusText}`);
+  }
+
+  const character = await response.json();
+  return {
+    avatar_url: character.thumbnail_url,
+    weeklies: character.mythic_plus_weekly_highest_level_runs,
+  };
+}

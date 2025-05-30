@@ -16,16 +16,23 @@ datasource db {
 }
 
 model Raider {
-  id        String   @id @default(cuid())
-  name      String
-  class     String
-  spec      String
-  active    Boolean  @default(true)
-  lastSeen  DateTime @default(now())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id             String   @id @default(cuid())
+  name           String
+  realm          String
+  rank           Int
+  class          String
+  spec           String
+  role           String
+  raiderioUpdate DateTime
+  avatarUrl      String
+  active         Boolean  @default(true)
+  lastSeen       DateTime @default(now())
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   progress Weeklies[]
+
+  @@unique([name, realm], name: "name_realm")
 }
 
 model Weeklies {
