@@ -13,35 +13,43 @@ interface RaiderIOPlayer {
 }
 
 export async function upsertRaider(player: RaiderIOPlayer) {
-  return prisma.raider.upsert({
-    where: {
-      name_realm: {
-        name: player.name,
-        realm: player.realm,
+  try {
+    return await prisma.raider.upsert({
+      where: {
+        name_realm: {
+          name: player.name,
+          realm: player.realm,
+        },
       },
-    },
-    update: {
-      class: player.class,
-      spec: player.spec,
-      realm: player.realm,
-      rank: player.rank,
-      role: player.role,
-      raiderioUpdate: player.raiderioUpdate,
-      avatarUrl: player.avatarUrl,
-      active: true,
-      lastSeen: new Date(),
-    },
-    create: {
-      name: player.name,
-      class: player.class,
-      spec: player.spec,
-      realm: player.realm,
-      rank: player.rank,
-      role: player.role,
-      raiderioUpdate: new Date(player.raiderioUpdate),
-      avatarUrl: player.avatarUrl,
-      active: true,
-      lastSeen: new Date(),
-    },
-  });
+      update: {
+        class: player.class,
+        spec: player.spec,
+        realm: player.realm,
+        rank: player.rank,
+        role: player.role,
+        raiderioUpdate: player.raiderioUpdate,
+        avatarUrl: player.avatarUrl,
+        active: true,
+        lastSeen: new Date(),
+      },
+      create: {
+        name: player.name,
+        class: player.class,
+        spec: player.spec,
+        realm: player.realm,
+        rank: player.rank,
+        role: player.role,
+        raiderioUpdate: player.raiderioUpdate,
+        avatarUrl: player.avatarUrl,
+        active: true,
+        lastSeen: new Date(),
+      },
+    });
+  } catch (err) {
+    console.error(
+      `🔥 Prisma upsert failed for ${player.name}@${player.realm}:`,
+      err
+    );
+    throw err; // rethrow so caller can handle/report it
+  }
 }

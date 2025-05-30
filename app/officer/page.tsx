@@ -1,8 +1,16 @@
+
+import SyncRosterButton from '@/components/SyncRosterButton'
 import React from 'react'
 
 const page = () => {
+ 
+
+
   return (
-    <div> officer page</div>
+    <div> <h1>officer page</h1>
+     <SyncRosterButton/>
+    
+    </div>
   )
 }
 

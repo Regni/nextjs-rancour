@@ -28,7 +28,7 @@ export async function syncRosterDB() {
       officers.includes(member.character.name)
   );
 
-  const rosterWithAvatars = await Promise.all(
+  const rosterCharData = await Promise.all(
     roster.map(async (raider: any) => {
       const extraData = await getExtraRaiderioData(
         raider.character.name,
@@ -47,8 +47,8 @@ export async function syncRosterDB() {
   );
 
   //update db
-
-  for (const raider of rosterWithAvatars) {
+  const errors: { name: string; error: any }[] = [];
+  for (const raider of rosterCharData) {
     await upsertRaider({
       name: raider.character.name,
       realm: raider.character.realm,
@@ -59,11 +59,24 @@ export async function syncRosterDB() {
       raiderioUpdate: new Date(raider.character.last_crawled_at),
       avatarUrl: raider.character.avatar_url,
     }).catch((err) => {
-      console.error("Error updating Raider:", err);
+      console.log(err);
+      errors.push({ name: raider.character.name, error: err });
+      console.log(
+        `Error syncing raider ${raider.character.name}: ${err.message}`
+      );
     });
   }
 
-  return rosterWithAvatars;
+  //errors thrown to be handled by the caller
+  if (errors.length > 0) {
+    console.log(errors);
+    throw new Error(
+      `Sync failed for ${errors.length} raiders: ${errors
+        .map((e) => e.name)
+        .join(", ")}`
+    );
+  }
+  return true;
 }
 
 export async function getRosterDB() {
