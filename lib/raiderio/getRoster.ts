@@ -47,6 +47,9 @@ export async function syncRosterDB() {
   );
 
   //update db
+
+  //maybe later to add a check to see if the roster has changed in alerts
+  const removedMembers = await deactivateMembers(rosterCharData);
   const errors: { name: string; error: any }[] = [];
   for (const raider of rosterCharData) {
     await upsertRaider({
@@ -90,4 +93,42 @@ export async function getRosterDB() {
   });
 
   return roster;
+}
+
+export async function deactivateMembers(roster: any[]) {
+  try {
+    const dbRoster = await prisma.raider.findMany({
+      where: {
+        active: true,
+      },
+    });
+    // Get all names from the current roster
+    const currentNames = roster.map((member: any) => member.character.name);
+
+    // Find members in DB that are not in current roster (to deactivate)
+    const membersToDeactivate = dbRoster.filter(
+      (dbMember) => !currentNames.includes(dbMember.name)
+    );
+
+    // Update inactive members
+    if (membersToDeactivate.length > 0) {
+      await prisma.raider.updateMany({
+        where: {
+          name: {
+            in: membersToDeactivate.map((member) => member.name),
+          },
+        },
+        data: {
+          active: false,
+        },
+      });
+    }
+    console.log(
+      `Deactivated ${membersToDeactivate.length} members from the roster.`
+    );
+    return membersToDeactivate;
+  } catch (error) {
+    console.error("Error fetching roster from DB:", error);
+    throw error; //errors thrown to be handled by the caller
+  }
 }
