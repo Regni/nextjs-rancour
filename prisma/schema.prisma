@@ -30,7 +30,7 @@ model Raider {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  progress Weeklies[]
+  weeklies Weeklies[]
 
   @@unique([name, realm], name: "name_realm")
 }
@@ -38,12 +38,13 @@ model Raider {
 model Weeklies {
   id          String   @id @default(cuid())
   raiderId    String
-  weekNumber  Int
+  season      Int
+  week        Int
   runUrls     String[]
   completed   Boolean  @default(false)
   lastUpdated DateTime @updatedAt
 
   raider Raider @relation(fields: [raiderId], references: [id])
 
-  @@unique([raiderId, weekNumber])
+  @@unique([raiderId, season, week], name: "raider_season_week")
 }
