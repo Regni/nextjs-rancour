@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { getCurrentWeek } from "@/lib/raiderio/getCurrentWeek";
-import { syncWeeklies } from "@/lib/raiderio/getWeeklies";
+import { getCurrentWeeklies, getWeeklies } from "@/lib/raiderio/getWeeklies";
 
 export async function GET() {
   try {
-    const roster = await syncWeeklies();
+    const roster = await getCurrentWeeklies();
     return NextResponse.json(roster);
   } catch (error) {
     return NextResponse.json(

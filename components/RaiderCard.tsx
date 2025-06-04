@@ -1,4 +1,4 @@
-
+import { RaiderType } from '@/types/raider.types'
 import React from 'react'
 import Image from 'next/image'
 import {
@@ -9,17 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-const raiderCard = ({name,realm, rank,wowClass,spec,role,lastUpdate, avatarUrl}: {
-  name: string
-  realm: string
-  rank: number
-  wowClass: string
-  spec: string
-  role: string
-  lastUpdate: string
-  avatarUrl: string
 
-}) => {
+
+
+const raiderCard = ({raider}: {raider: RaiderType}) => {
+  const { name, rank, class : wowClass, spec, role, raiderioUpdate : lastUpdate, avatarUrl} = raider;
   const lastUpdateDate = new Date(lastUpdate)
   const rolePicture = role === "DPS" ? "/icon_3.png" : role === "HEALING" ? "/icon_1.png" : "/icon_2.png"
 

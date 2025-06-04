@@ -39,9 +39,15 @@ export async function syncWeeklies() {
 
         const completed =
           raiderData.mythic_plus_weekly_highest_level_runs.length > 0;
-        const raiderArrary = raider.weeklies[0].runUrls;
 
-        if (!arraysAreEqual(weeklieArray, raiderArrary)) {
+        // Check if the weeklies array is empty or does not exist yet, if doesn't exist, create empty array
+        const raiderArrary =
+          raider.weeklies.length > 0 ? raider.weeklies[0].runUrls : [];
+
+        if (
+          raider.weeklies.length === 0 ||
+          !arraysAreEqual(weeklieArray, raiderArrary)
+        ) {
           console.log(
             `Updating weeklies for ${raider.name}@${raider.realm} - Week ${seassonData.currentWeek}`
           );
@@ -72,4 +78,43 @@ function arraysAreEqual(a: string[], b: string[]) {
   const sortedA = [...a].sort();
   const sortedB = [...b].sort();
   return sortedA.every((val, i) => val === sortedB[i]);
+}
+
+export async function getWeeklies() {
+  const weekliesRoster = await prisma.raider.findMany({
+    where: {
+      active: true,
+    },
+    include: {
+      weeklies: true,
+    },
+  });
+
+  return weekliesRoster;
+}
+
+export async function getCurrentWeeklies() {
+  const currentWeek = await getCurrentWeek();
+
+  const weekliesRoster = await prisma.weeklies.findMany({
+    where: {
+      season: currentWeek.currentSeason,
+      week: currentWeek.currentWeek,
+    },
+    include: {
+      raider: {
+        select: {
+          name: true,
+          rank: true,
+          class: true,
+          spec: true,
+          role: true,
+          raiderioUpdate: true,
+          avatarUrl: true,
+        },
+      },
+    },
+  });
+
+  return weekliesRoster;
 }

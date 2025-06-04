@@ -2,8 +2,9 @@
 
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion'
 import RaiderCard from '@/components/RaiderCard'
+import OfficerPageCard from '../OfficerPageCard'
 
-const RosterAnimationComponent = ({ roster }: { roster: any[] }) => {
+const RosterAnimationComponent = ({ roster, officerPage =false }: { roster: any[], officerPage?:boolean }) => {
   return (
     <LayoutGroup>
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
@@ -11,22 +12,18 @@ const RosterAnimationComponent = ({ roster }: { roster: any[] }) => {
           {roster.map((raider) => (
             <motion.div
               layout
-              key={raider.name}
+              key={raider.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
             >
+
+              {officerPage ? <OfficerPageCard weeklies={raider} />:
               <RaiderCard
-                name={raider.name}
-                realm={raider.realm}
-                rank={raider.rank}
-                wowClass={raider.class}
-                spec={raider.spec}
-                role={raider.role}
-                lastUpdate={raider.raiderioUpdate}
-                avatarUrl={raider.avatarUrl}
+                raider={raider} 
               />
+            }
             </motion.div>
           ))}
         </AnimatePresence>
