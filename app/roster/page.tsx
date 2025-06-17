@@ -47,17 +47,13 @@ const page = async ({ searchParams } :PageProps) => {
   const sortedRoster = sortRoster(roster)
   
   return (
-    <section>
-      <div className='flex justify-between items-center mb-4 p-2'>
-      <h1 className='text-5xl font-extrabold'>roster page</h1>
-      <RosterSorter currentSort={sortBy}/>
-      </div>
-      <RosterAnimationComponent roster={sortedRoster} />
-      
-      
+    <section className="w-full p-4 bg-background-accent dark:bg-background-accent flex-grow">
+  <div className="flex justify-between items-center mb-4 p-2">
+    <h1 className="text-5xl font-extrabold">roster page</h1>
+    <RosterSorter currentSort={sortBy} />
+  </div>
 
-      
-    
+  <RosterAnimationComponent roster={sortedRoster} />
 </section>
   )
 

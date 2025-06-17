@@ -17,13 +17,13 @@ const OfficerPageCard = ({weeklies}: { weeklies: WeeklyEntry }) => {
   
   const {raider: { name, rank, class : wowClass, spec, role, raiderioUpdate : lastUpdate, avatarUrl },runUrls} = weeklies;
   const lastUpdateDate = new Date(lastUpdate)
-  const rolePicture = role === "DPS" ? "/icon_3.png" : role === "HEALING" ? "/icon_1.png" : "/icon_2.png"
+  const rolePicture = role === "DPS" ? "/dpsBadge.png" : role === "HEALING" ? "/tankBadge.png" : "/healerBadge.png"
 
   const rankName = rank === 1 ? "GM" : rank === 2 ? "Officer" : rank === 4  ? "Raider" : rank=== 7 ? "Raider" :  "Trial" 
   return (
     <Card className="relative overflow-hidden  h-[250px]">
-    <Image src={avatarUrl} alt='Role Badge' width={48} height={48} className='absolute top-2 right-2 rounded-tr-2xl'/>
-    <Image src={rolePicture}  alt='role Badge' width={80} height={80} className='absolute bottom-0 right-0'/>
+    <Image src={avatarUrl} alt='avatar Badge' width={48} height={48} className='absolute top-2 right-2 rounded-tr-2xl'/>
+    <Image src={rolePicture}  alt='role Badge' width={48} height={48} className='absolute bottom-0 right-0'/>
     <CardHeader>
       <CardTitle>{name}</CardTitle>
       <CardDescription>{`${spec} ${wowClass}`}</CardDescription>
