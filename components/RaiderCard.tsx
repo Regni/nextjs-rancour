@@ -15,9 +15,9 @@ import {
 const raiderCard = ({raider}: {raider: RaiderType}) => {
   const { name, rank, class : wowClass, spec, role, raiderioUpdate : lastUpdate, avatarUrl} = raider;
   const lastUpdateDate = new Date(lastUpdate)
-  const rolePicture = role === "DPS" ? "/dpsBadge.png" : role === "HEALING" ? "/tankBadge.png" : "/healerBadge.png"
+  const rolePicture = role === "DPS" ? "/dpsBadge.png" : role === "HEALING" ? "/healerBadge.png" : "/tankBadge.png"
 
-  const rankName = rank === 1 ? "GM" : rank === 2 ? "Officer" : rank === 4  ? "Raider" : rank=== 7 ? "Raider" :  "Trial" 
+  const rankName = rank === 1 ? "Officer" : rank === 2 ? "Officer" : rank === 4  ? "Raider" : rank=== 7 ? "Raider" :  "Trial" 
   return (
     <Card className="relative overflow-hidden w-70">
     <Image src={avatarUrl} alt='Role Badge' width={48} height={48} className='absolute top-2 right-2 rounded-tr-2xl'/>
