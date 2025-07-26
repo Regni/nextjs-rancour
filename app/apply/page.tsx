@@ -26,7 +26,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Separator } from "@radix-ui/react-select";
+import { Separator } from "@/components/ui/separator";
 import GuildHistoryComp from "@/components/GuildHistoryComp";
 
 const guildHistoryEntry = z.object({
@@ -186,6 +186,11 @@ const page = () => {
       <h1 className="text-3xl font-bold text-center mb-6">Guild Application</h1>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <h3 className="text-2xl font-semibold">
+            Character and Contact information
+          </h3>
+          <FormDescription>All fields are mandatory</FormDescription>
+
           <FormField
             control={form.control}
             name="characterName"
@@ -226,13 +231,13 @@ const page = () => {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role</FormLabel>
+                  <FormLabel htmlFor="role-select">Role</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
-                      <SelectTrigger className="w-[180px]">
+                      <SelectTrigger id="role-select" className="w-[180px]">
                         <SelectValue placeholder="Your role..." />
                       </SelectTrigger>
                       <SelectContent>
@@ -397,6 +402,85 @@ const page = () => {
             )}
           />
 
+          <GuildHistoryComp control={form.control} />
+
+          <FormLabel className="text-2xl font-semibold">
+            Additional Information
+          </FormLabel>
+          <FormDescription>
+            Please provide any additional information that may help your
+            application.
+          </FormDescription>
+
+          <FormField
+            control={form.control}
+            name="comments"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel htmlFor="personal-comments">
+                  Miscellaneous Information
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    id="personal-comments"
+                    placeholder="Feel free to tell us about yourself, your history, your character, things you can do that may be of benefit to the guild, or anything else you think may help your application."
+                    {...field}
+                    className="w-full p-3 border border-gray-300 rounded"
+                    rows={4}
+                  />
+                </FormControl>
+                <FormDescription></FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormItem className="space-y-2">
+            <FormLabel className="text-lg">Optional Logs</FormLabel>
+            <FormDescription>
+              This is an optional field where you can provide a link to your
+              logs. If you have a specific log you are proud of, please share it
+              here.
+            </FormDescription>
+            <div className="flex flex-col gap-0">
+              <FormField
+                control={form.control}
+                name="logs.link"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Warcraft log</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="https://www.warcraftlogs.com/character/eu/..."
+                        {...field}
+                        className="w-full p-2 border border-gray-300 rounded"
+                      />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="logs.comment"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Why are you proud of this log?"
+                        {...field}
+                        className="w-full p-2 border border-gray-300 rounded"
+                      />
+                    </FormControl>
+                    <FormDescription></FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </FormItem>
+
           <FormField
             control={form.control}
             name="references"
@@ -470,76 +554,7 @@ const page = () => {
             )}
           />
 
-          <GuildHistoryComp control={form.control} />
-
-          <FormField
-            control={form.control}
-            name="comments"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Additional information</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Feel free to tell us about yourself, your history, your character, things you can do that may be of benefit to the guild, or anything else you think may help your application."
-                    {...field}
-                    className="w-full p-3 border border-gray-300 rounded"
-                    rows={4}
-                  />
-                </FormControl>
-                <FormDescription></FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormItem className="space-y-2">
-            <FormLabel className="text-lg font-semibold">
-              Optional Logs
-            </FormLabel>
-            <FormDescription>
-              This is an optional field where you can provide a link to your
-              logs. If you have a specific log you are proud of, please share it
-              here.
-            </FormDescription>
-
-            <FormField
-              control={form.control}
-              name="logs.link"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>warcraft log</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="https://www.warcraftlogs.com/character/eu/..."
-                      {...field}
-                      className="w-full p-3 border border-gray-300 rounded"
-                    />
-                  </FormControl>
-                  <FormDescription></FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="logs.comment"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>warcraft log</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Why are you proud of this log?"
-                      {...field}
-                      className="w-full p-3 border border-gray-300 rounded"
-                    />
-                  </FormControl>
-                  <FormDescription></FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </FormItem>
-
+          <Separator />
           <FormItem className="mt-6">
             <FormLabel></FormLabel>
             <FormDescription>
