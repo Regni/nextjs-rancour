@@ -27,10 +27,13 @@ export async function getCurrentSeason(): Promise<any> {
     throw new Error(`raider.io error: ${seasonDataResponse.statusText}`);
   }
   const seasonData = await seasonDataResponse.json();
+  const now = new Date();
+  const currentSeason = seasonData.seasons.find((season: any) => {
+    const start = new Date(season.starts.eu);
+    const end = new Date(season.ends.eu);
+    return now >= start && now <= end && season.is_main_season === true;
+  });
 
-  const currentSeason = seasonData.seasons.find(
-    (season: any) => season.is_main_season === true
-  );
   return {
     currentSeason: currentSeason.blizzard_season_id,
     seasonStart: currentSeason.starts.eu,

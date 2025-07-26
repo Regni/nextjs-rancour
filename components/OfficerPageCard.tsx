@@ -17,7 +17,7 @@ const OfficerPageCard = ({weeklies}: { weeklies: WeeklyEntry }) => {
   
   const {raider: { name, rank, class : wowClass, spec, role, raiderioUpdate : lastUpdate, avatarUrl },runUrls} = weeklies;
   const lastUpdateDate = new Date(lastUpdate)
-  const rolePicture = role === "DPS" ? "/dpsBadge.png" : role === "HEALING" ? "/tankBadge.png" : "/healerBadge.png"
+  const rolePicture = role === "DPS" ? "/dpsBadge.png" : role === "HEALING" ? "/healerBadge.png" : "/tankBadge.png"
 
   const rankName = rank === 1 ? "GM" : rank === 2 ? "Officer" : rank === 4  ? "Raider" : rank=== 7 ? "Raider" :  "Trial" 
   return (
