@@ -51,7 +51,7 @@ export async function syncWeeklies() {
           console.log(
             `Updating weeklies for ${raider.name}@${raider.realm} - Week ${seassonData.currentWeek}`
           );
-          upsertWeekly({
+          await upsertWeekly({
             raiderId: raider.id,
             week: seassonData.currentWeek,
             runUrls: weeklieArray,

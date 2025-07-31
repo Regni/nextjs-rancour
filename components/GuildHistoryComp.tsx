@@ -82,7 +82,7 @@ const GuildHistoryComp = ({ control }: Props) => {
   return (
     <FormItem className="space-y-2">
       <Separator className="mb-4" />
-      <FormLabel className="text-2xl font-semibold">Guild History</FormLabel>
+      <h3 className="text-2xl font-semibold">Guild History</h3>
       <FormDescription>
         Please provide information about your previous guilds
       </FormDescription>

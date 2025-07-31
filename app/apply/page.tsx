@@ -263,13 +263,13 @@ const page = () => {
               name="class"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Class</FormLabel>
+                  <FormLabel htmlFor="class-select">Class</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
-                      <SelectTrigger className="w-[180px]">
+                      <SelectTrigger id="class-select" className="w-[180px]">
                         <SelectValue placeholder="Your class..." />
                       </SelectTrigger>
                       <SelectContent>
@@ -309,7 +309,7 @@ const page = () => {
             name="raiderIoLinks"
             render={() => (
               <FormItem>
-                <FormLabel>Character Links</FormLabel>
+                <FormLabel htmlFor="new-link">Character Links</FormLabel>
                 <FormDescription>
                   Add links to your character raider.io profile (mandatory){" "}
                   <br />
@@ -404,9 +404,7 @@ const page = () => {
 
           <GuildHistoryComp control={form.control} />
 
-          <FormLabel className="text-2xl font-semibold">
-            Additional Information
-          </FormLabel>
+          <h3 className="text-2xl font-semibold">Additional Information</h3>
           <FormDescription>
             Please provide any additional information that may help your
             application.
@@ -435,7 +433,7 @@ const page = () => {
             )}
           />
           <FormItem className="space-y-2">
-            <FormLabel className="text-lg">Optional Logs</FormLabel>
+            <h3 className="text-lg">Optional Logs</h3>
             <FormDescription>
               This is an optional field where you can provide a link to your
               logs. If you have a specific log you are proud of, please share it
@@ -455,7 +453,7 @@ const page = () => {
                         className="w-full p-2 border border-gray-300 rounded"
                       />
                     </FormControl>
-                    <FormDescription></FormDescription>
+
                     <FormMessage />
                   </FormItem>
                 )}
@@ -486,7 +484,7 @@ const page = () => {
             name="references"
             render={() => (
               <FormItem>
-                <FormLabel>References</FormLabel>
+                <FormLabel htmlFor="new-ref">References</FormLabel>
                 <FormDescription>
                   If you know someone in the guild, please mention them here.
                 </FormDescription>
@@ -556,7 +554,6 @@ const page = () => {
 
           <Separator />
           <FormItem className="mt-6">
-            <FormLabel></FormLabel>
             <FormDescription>
               By submitting this application, you confirm that all information
               provided is accurate and complete to the best of your knowledge.
