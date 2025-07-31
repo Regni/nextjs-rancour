@@ -42,6 +42,10 @@ const RaiderIoLinksComp = ({ form }: Props) => {
       setLinkError("This link already exists.");
       return;
     }
+    if (form.getValues("raiderIoLinks").length >= 7) {
+      setLinkError("You can only add up to 7 Raider.io links.");
+    }
+
     setLinkError(null);
     append(modifiedLink);
     input.value = "";
@@ -69,7 +73,6 @@ const RaiderIoLinksComp = ({ form }: Props) => {
             <div className="mb-3 border rounded-md p-3 bg-gray-50 dark:bg-gray-900">
               <div className="space-y-2">
                 {fields.map((field, index) => {
-                  const error = form.formState.errors.raiderIoLinks?.[index];
                   return (
                     <div
                       key={field.id}
@@ -82,7 +85,10 @@ const RaiderIoLinksComp = ({ form }: Props) => {
 
                       <button
                         type="button"
-                        onClick={() => remove(index)}
+                        onClick={() => {
+                          remove(index);
+                          setLinkError(null);
+                        }}
                         className="ml-2 p-1 rounded-full text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
                       >
                         ✕
@@ -100,6 +106,7 @@ const RaiderIoLinksComp = ({ form }: Props) => {
           )}
           <div className="flex gap-2">
             <Input
+              disabled={fields.length >= 7}
               id="new-link"
               placeholder="https://raider.io/characters/..."
               className="flex-1"
@@ -111,6 +118,7 @@ const RaiderIoLinksComp = ({ form }: Props) => {
               }}
             />
             <button
+              disabled={fields.length >= 7}
               type="button"
               onClick={() => {
                 const input = document.getElementById(
@@ -120,7 +128,7 @@ const RaiderIoLinksComp = ({ form }: Props) => {
                   handleAddLink(input.value, input);
                 }
               }}
-              className="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-600 disabled:cursor-not-allowed"
             >
               Add
             </button>
