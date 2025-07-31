@@ -3,10 +3,17 @@ import OfficerWeekliesView from "@/components/OfficerWeekliesView";
 import SyncButton from "@/components/SyncButton";
 import Image from "next/image";
 import React from "react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 interface PageProps {
   searchParams: Promise<{ mode?: string }>;
 }
 const page = async ({ searchParams }: PageProps) => {
+  const session = await auth();
+
+  if (!session || !session.user) {
+    redirect("/");
+  }
   const { mode = "weeklies" } = await searchParams; // default tab
 
   return (
