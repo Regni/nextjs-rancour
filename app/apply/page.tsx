@@ -27,7 +27,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
-import GuildHistoryComp from "@/components/GuildHistoryComp";
+import GuildHistoryComp from "@/components/ApplicationComponents/GuildHistoryComp";
+import RaiderIoLinksComp from "@/components/ApplicationComponents/RaiderIoLinksComp";
 
 const guildHistoryEntry = z.object({
   guildName: z.string().min(1, { message: "Guild name is required" }),
@@ -96,6 +97,14 @@ const optionalGuildHistoryEntry = z
     }
   );
 
+export const raiderIoLink = z
+  .string()
+  .url("This should be a URL")
+  .refine((url) => url.startsWith("https://raider.io/characters/"), {
+    message:
+      "Links should be valid character links and start with https://raider.io/characters/",
+  });
+
 export const formSchema = z.object({
   characterName: z.string().min(1, "Character name is required"),
   discord: z.string().min(1, "Discord tag is required"),
@@ -103,7 +112,9 @@ export const formSchema = z.object({
   role: z.enum(["DPS", "Healer", "Tank"], {
     errorMap: () => ({ message: "Role is required" }),
   }),
-  raiderIoLinks: z.array(z.string().url("This should be a URL")),
+  raiderIoLinks: z
+    .array(raiderIoLink)
+    .min(1, "At least one Raider.io link is required"),
   bio: z.string().min(1, "Introduction is required"),
   guildHistory: z.tuple([
     guildHistoryEntry,
@@ -114,7 +125,17 @@ export const formSchema = z.object({
   comments: z.string().optional(),
   logs: z
     .object({
-      link: z.string().url("This should be a valid URL").optional(),
+      link: z
+        .string()
+        .url("This should be a valid URL")
+        .refine(
+          (url) => url.startsWith("https://www.warcraftlogs.com/reports/"),
+          {
+            message:
+              "Links should be valid warcraftlogs links and start with https://www.warcraftlogs.com/reports/",
+          }
+        )
+        .optional(),
       comment: z.string().optional(),
     })
     .optional(),
@@ -128,7 +149,7 @@ const page = () => {
       discord: "",
       class: "",
       role: undefined,
-      raiderIoLinks: [""],
+      raiderIoLinks: undefined,
       bio: "",
       guildHistory: [
         { guildName: "", server: "", reason: "", joined: "" },
@@ -137,12 +158,11 @@ const page = () => {
       ],
       comments: "",
       references: [""],
+      logs: {
+        link: "",
+        comment: "",
+      },
     },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "raiderIoLinks" as never,
   });
 
   const referenseFieldArray = useFieldArray({
@@ -157,15 +177,6 @@ const page = () => {
     console.log("Form submitted:", values);
 
     setSubmitted(true);
-  };
-
-  const getOrdinalLabel = (index: number): string => {
-    if (index === 0) return "Main:";
-    const suffixes = ["th", "st", "nd", "rd"];
-    const v = index;
-    const suffix =
-      suffixes[v % 100 >= 11 && v % 100 <= 13 ? 0 : v % 10] || "th";
-    return `${v}${suffix} alt:`;
   };
 
   if (submitted) {
@@ -189,14 +200,14 @@ const page = () => {
           <h3 className="text-2xl font-semibold">
             Character and Contact information
           </h3>
-          <FormDescription>All fields are mandatory</FormDescription>
+          <FormDescription>All fields with "*" are mandatory</FormDescription>
 
           <FormField
             control={form.control}
             name="characterName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Character name</FormLabel>
+                <FormLabel>Character Name*</FormLabel>
                 <FormControl>
                   <Input placeholder="Your in game name" {...field} />
                 </FormControl>
@@ -213,7 +224,7 @@ const page = () => {
             name="discord"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Discord Tag</FormLabel>
+                <FormLabel>Discord Tag*</FormLabel>
                 <FormControl>
                   <Input placeholder="e.g. JohnDoe#1234" {...field} />
                 </FormControl>
@@ -231,7 +242,7 @@ const page = () => {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="role-select">Role</FormLabel>
+                  <FormLabel htmlFor="role-select">Role*</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -263,7 +274,7 @@ const page = () => {
               name="class"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="class-select">Class</FormLabel>
+                  <FormLabel htmlFor="class-select">Class*</FormLabel>
                   <FormControl>
                     <Select
                       onValueChange={field.onChange}
@@ -304,88 +315,15 @@ const page = () => {
               )}
             />
           </div>
-          <FormField
-            control={form.control}
-            name="raiderIoLinks"
-            render={() => (
-              <FormItem>
-                <FormLabel htmlFor="new-link">Character Links</FormLabel>
-                <FormDescription>
-                  Add links to your character raider.io profile (mandatory){" "}
-                  <br />
-                  and any other relevant alts (optional)
-                </FormDescription>
 
-                {fields.length > 0 && (
-                  <div className="mb-3 border rounded-md p-3 bg-gray-50 dark:bg-gray-900">
-                    <div className="space-y-2">
-                      {fields.map((field, index) => (
-                        <div
-                          key={field.id}
-                          className="flex justify-between items-center py-1 px-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
-                        >
-                          <span className="truncate flex-1">
-                            {getOrdinalLabel(index)}{" "}
-                            {form.getValues(`raiderIoLinks.${index}`)}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() => remove(index)}
-                            className="ml-2 p-1 rounded-full text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Input field for adding new links */}
-                <div className="flex gap-2">
-                  <Input
-                    id="new-link"
-                    placeholder="https://raider.io/characters/..."
-                    className="flex-1"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        const input = e.currentTarget;
-                        if (input.value.trim()) {
-                          append(input.value.trim());
-                          input.value = "";
-                        }
-                      }
-                    }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const input = document.getElementById(
-                        "new-link"
-                      ) as HTMLInputElement;
-                      if (input.value.trim()) {
-                        append(input.value.trim());
-                        input.value = "";
-                      }
-                    }}
-                    className="px-3 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                  >
-                    Add
-                  </button>
-                </div>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <RaiderIoLinksComp form={form} />
 
           <FormField
             control={form.control}
             name="bio"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Who are you?</FormLabel>
+                <FormLabel>Who are you?*</FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Tell us a bit about yourself..."
@@ -394,9 +332,7 @@ const page = () => {
                     rows={4}
                   />
                 </FormControl>
-                <FormDescription>
-                  Please provide your Discord tag for communication.
-                </FormDescription>
+                <FormDescription></FormDescription>
                 <FormMessage />
               </FormItem>
             )}

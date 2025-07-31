@@ -17,9 +17,9 @@ import {
 
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
-import { formSchema } from "../app/apply/page";
-import { Textarea } from "./ui/textarea";
-import { Separator } from "./ui/separator";
+import { formSchema } from "../../app/apply/page";
+import { Textarea } from "../ui/textarea";
+import { Separator } from "../ui/separator";
 
 type Props = {
   control: Control<z.infer<typeof formSchema>>;
@@ -90,7 +90,7 @@ const GuildHistoryComp = ({ control }: Props) => {
       <div className="space-y-6">
         {/* First Guild */}
         <div>
-          <h3 className="text-base font-medium mb-2">Most Recent Guild</h3>
+          <h3 className="text-base font-medium mb-2">Most Recent Guild*</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <FormField
               control={control}
