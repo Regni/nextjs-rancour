@@ -122,7 +122,8 @@ export const formSchema = z.object({
               "Links should be valid warcraftlogs links and start with https://www.warcraftlogs.com/reports/",
           }
         )
-        .optional(),
+        .optional()
+        .or(z.literal("")),
       comment: z.string().optional(),
     })
     .optional(),
