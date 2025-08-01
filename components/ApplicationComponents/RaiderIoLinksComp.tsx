@@ -10,8 +10,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { formSchema } from "../../app/apply/page";
-import { raiderIoLink } from "../../app/apply/page";
+
+import { formSchema } from "@/lib/schemas/applicationZodSchema";
+import { raiderIoLink } from "@/lib/schemas/applicationZodSchema";
 import { useFieldArray } from "react-hook-form";
 
 type Props = {

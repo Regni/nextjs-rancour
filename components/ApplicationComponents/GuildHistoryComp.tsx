@@ -17,7 +17,7 @@ import {
 
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
-import { formSchema } from "../../app/apply/page";
+import { formSchema } from "@/lib/schemas/applicationZodSchema";
 import { Textarea } from "../ui/textarea";
 import { Separator } from "../ui/separator";
 
