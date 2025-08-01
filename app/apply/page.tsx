@@ -29,6 +29,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import GuildHistoryComp from "@/components/ApplicationComponents/GuildHistoryComp";
 import RaiderIoLinksComp from "@/components/ApplicationComponents/RaiderIoLinksComp";
+import { LoadingSpinner } from "@/components/ui/spinner";
+import { createApplication } from "@/lib/db/applications";
 
 const guildHistoryEntry = z.object({
   guildName: z.string().min(1, { message: "Guild name is required" }),
@@ -105,10 +107,26 @@ export const raiderIoLink = z
       "Links should be valid character links and start with https://raider.io/characters/",
   });
 
+const raiderClass = z.enum([
+  "DeathKnight",
+  "DemonHunter",
+  "Druid",
+  "Evoker",
+  "Hunter",
+  "Mage",
+  "Monk",
+  "Paladin",
+  "Priest",
+  "Rogue",
+  "Shaman",
+  "Warlock",
+  "Warrior",
+]);
+
 export const formSchema = z.object({
   characterName: z.string().min(1, "Character name is required"),
   discord: z.string().min(1, "Discord tag is required"),
-  class: z.string().min(1, "Class is required "),
+  class: raiderClass,
   role: z.enum(["DPS", "Healer", "Tank"], {
     errorMap: () => ({ message: "Role is required" }),
   }),
@@ -140,15 +158,20 @@ export const formSchema = z.object({
       comment: z.string().optional(),
     })
     .optional(),
+  botcheck: z.string().optional(),
 });
 
 const page = () => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [submitted, setSubmitted] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       characterName: "",
       discord: "",
-      class: "",
+      class: undefined,
       role: undefined,
       raiderIoLinks: undefined,
       bio: "",
@@ -171,15 +194,52 @@ const page = () => {
     name: "references" as never,
   });
 
-  const [submitted, setSubmitted] = useState(false);
+  const handleSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/apply", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
 
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    // Here you could POST to an API or backend
-    console.log("Form submitted:", values);
+      if (!response.ok) {
+        const errorData = await response.json();
+        setError(errorData.error || "Failed to submit application");
+        return;
+      }
+      setError(null);
 
-    setSubmitted(true);
+      setSubmitted(true);
+      setInterval(() => {
+        setSubmitted(false);
+      }, 5000);
+    } catch (error) {
+      setError(
+        "There was an error submitting your application. Please try again later."
+      );
+      console.error("Error submitting form:", error);
+    } finally {
+      setLoading(false);
+    }
   };
-
+  //loading state for the form submission
+  if (loading) {
+    return (
+      <div className="max-w-xl mx-auto my-10 p-6 bg-green-100 rounded-xl shadow dark:bg-green-950 relative">
+        <h1 className="text-2xl font-bold text-center text-green-700">
+          Sending your application...
+        </h1>
+        <div className="text-center mt-4">
+          <p>Please wait while we process your application.</p>
+        </div>
+        <LoadingSpinner className="mx-auto mt-4 scale-350 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" />
+      </div>
+    );
+  }
+  //completed state for the form submission
   if (submitted) {
     return (
       <div className="max-w-xl mx-auto my-10 p-6 bg-green-100 rounded-xl shadow dark:bg-green-950">
@@ -196,7 +256,19 @@ const page = () => {
   return (
     <div className="max-w-4xl mx-auto mt-10 p-6 bg-white dark:bg-background-accent rounded-xl shadow flex-1">
       <h1 className="text-3xl font-bold text-center mb-6">Guild Application</h1>
+      {error && (
+        <div className="bg-red-100 text-red-700 p-4 rounded mb-4">
+          <p>{error}</p>
+        </div>
+      )}
       <Form {...form}>
+        <input
+          type="text"
+          {...form.register("botcheck")}
+          className="hidden"
+          tabIndex={-1}
+          autoComplete="off"
+        />
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <h3 className="text-2xl font-semibold">
             Character and Contact information
@@ -287,23 +359,23 @@ const page = () => {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Classes</SelectLabel>
-                          <SelectItem value="death-knight">
+                          <SelectItem value="DeathKnight">
                             Death Knight
                           </SelectItem>
-                          <SelectItem value="demon-hunter">
+                          <SelectItem value="DemonHunter">
                             Demon Hunter
                           </SelectItem>
-                          <SelectItem value="druid">Druid</SelectItem>
-                          <SelectItem value="evoker">Evoker</SelectItem>
-                          <SelectItem value="hunter">Hunter</SelectItem>
-                          <SelectItem value="mage">Mage</SelectItem>
-                          <SelectItem value="monk">Monk</SelectItem>
-                          <SelectItem value="paladin">Paladin</SelectItem>
-                          <SelectItem value="priest">Priest</SelectItem>
-                          <SelectItem value="rogue">Rogue</SelectItem>
-                          <SelectItem value="shaman">Shaman</SelectItem>
-                          <SelectItem value="warlock">Warlock</SelectItem>
-                          <SelectItem value="warrior">Warrior</SelectItem>
+                          <SelectItem value="Druid">Druid</SelectItem>
+                          <SelectItem value="Evoker">Evoker</SelectItem>
+                          <SelectItem value="Hunter">Hunter</SelectItem>
+                          <SelectItem value="Mage">Mage</SelectItem>
+                          <SelectItem value="Monk">Monk</SelectItem>
+                          <SelectItem value="Paladin">Paladin</SelectItem>
+                          <SelectItem value="Priest">Priest</SelectItem>
+                          <SelectItem value="Rogue">Rogue</SelectItem>
+                          <SelectItem value="Shaman">Shaman</SelectItem>
+                          <SelectItem value="Warlock">Warlock</SelectItem>
+                          <SelectItem value="Warrior">Warrior</SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>

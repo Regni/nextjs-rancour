@@ -48,3 +48,43 @@ model Weeklies {
 
   @@unique([raiderId, season, week], name: "raider_season_week")
 }
+
+model Application {
+  id            String      @id @default(cuid())
+  characterName String
+  discord       String
+  class         RaiderClass
+  role          Role
+  raiderIoLinks Json
+  bio           String
+  guildHistory  Json
+  references    String[]    @default([])
+  comments      String?
+  logs          Json?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  status        String      @default("pending") // pending, accepted, rejected
+  reviewerId    String?
+}
+
+enum Role {
+  DPS
+  Healer
+  Tank
+}
+
+enum RaiderClass {
+  DeathKnight
+  DemonHunter
+  Druid
+  Evoker
+  Hunter
+  Mage
+  Monk
+  Paladin
+  Priest
+  Rogue
+  Shaman
+  Warlock
+  Warrior
+}
