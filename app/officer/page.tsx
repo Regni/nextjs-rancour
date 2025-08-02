@@ -1,10 +1,11 @@
-import OfficerTabButton from "@/components/OfficerTabButton";
-import OfficerWeekliesView from "@/components/OfficerWeekliesView";
+import OfficerTabButton from "@/components/OfficerComponents/OfficerTabButton";
+import OfficerWeekliesView from "@/components/OfficerComponents/OfficerWeekliesView";
 import SyncButton from "@/components/SyncButton";
 import Image from "next/image";
 import React from "react";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import OfficerApplicationView from "@/components/OfficerComponents/OfficerApplicationView";
 interface PageProps {
   searchParams: Promise<{ mode?: string }>;
 }
@@ -31,7 +32,7 @@ const page = async ({ searchParams }: PageProps) => {
       <h1>officer page</h1>
       <section className="p-4">
         {mode === "weeklies" && <OfficerWeekliesView />}
-        {mode === "applications" && <p>Here you can manage applications.</p>}
+        {mode === "applications" && <OfficerApplicationView />}
         {mode === "homepage" && (
           <div>
             <Image
