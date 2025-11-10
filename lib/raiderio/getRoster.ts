@@ -4,13 +4,7 @@ import prisma from "../db/prisma";
 import { upsertRaider } from "../db/raider";
 
 export async function syncRosterDB() {
-  const officers = [
-    "Regnipaw",
-    "Snailmiao",
-    "Shurkweave",
-    "Eriktotem",
-    "Rickiy",
-  ];
+  const officers = ["Regnipaw", "Shamiao", "Shurkle", "Eriktotem", "Rickiy"];
   const url =
     "https://raider.io/api/v1/guilds/profile?region=eu&realm=Draenor&name=Rancour&fields=members";
 

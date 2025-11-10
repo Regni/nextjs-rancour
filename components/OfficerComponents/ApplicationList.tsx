@@ -40,6 +40,7 @@ const ApplicationList = ({ applications }: ApplicationListProps) => {
     <Accordion type="single" collapsible>
       {applications.map((application) => {
         const RaiderIoLinks = application.raiderIoLinks as string[];
+
         return (
           <AccordionItem key={application.id} value={`item-${application.id}`}>
             <AccordionTrigger className="flex">
@@ -60,6 +61,15 @@ const ApplicationList = ({ applications }: ApplicationListProps) => {
             <AccordionContent>
               <p>Class: {application.class}</p>
               <p>Comments: {application.comments}</p>
+              <p>Role: {application.role}</p>
+              {/* <p>
+                Experience:
+                <ul>
+                  {application.guildHistory![0]((exp, index) => (
+                    <li key={index}>{exp.guildName}</li>
+                  ))}
+                </ul>
+              </p> */}
               <p>
                 Submitted on:{" "}
                 {new Date(application.createdAt).toLocaleDateString()}
@@ -70,7 +80,7 @@ const ApplicationList = ({ applications }: ApplicationListProps) => {
                   <li key={index}> {link}</li>
                 ))}
               </ul>
-
+              <p>Additional info: {application.comments}</p>
               <Select
                 onValueChange={(value) =>
                   handleStatusChange(application.id, value)
